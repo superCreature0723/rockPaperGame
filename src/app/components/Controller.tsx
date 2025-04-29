@@ -1,7 +1,7 @@
 "use client"
 
-import { useGameContext } from '../context/gameContext'
-import ControllerItem from './ControllerItem'
+import { useGameContext } from '../context/gameContext';
+import { ControllerItem } from './index';
 
 type ControllerProps = {
     pcMove: () => void
@@ -10,12 +10,16 @@ type ControllerProps = {
 const Controller = ({ pcMove }: ControllerProps) => {
     const { dispatch } = useGameContext()
 
+    // dispatcher is handler the user clicked on controller func
     const dispatcher = (key: string, path: string) => {
         dispatch({ type: "SET_USER_SYMBOL", payload: key })
         dispatch({ type: "SET_USER_IMAGE", payload: path })
+
+        // call pcMove to move the pc by the random chose
         pcMove()
     }
 
+    // rock, scissor and paper click handler
     const rockClick = () => {
         dispatcher("rock", "/images/rock2.png")
     }
