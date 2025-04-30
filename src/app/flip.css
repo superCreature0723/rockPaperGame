@@ -1,0 +1,148 @@
+.flipCounter {
+    display: block;
+    position: relative;
+    width: 90px;
+    height: 80px;
+    -webkit-perspective-origin: 50% 50%;
+    perspective-origin: 50% 50%;
+    -webkit-perspective: 300px;
+    perspective: 300px;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0px 10px 10px -10px grey;
+  }
+  
+  .upperCard,
+  .lowerCard {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+  }
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: 4em;
+  }
+  
+  .upperCard {
+    align-items: flex-end;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  .upperCard span,
+  .flipCard.fold span {
+    -webkit-transform: translateY(50%);
+    transform: translateY(50%);
+  }
+  
+  .lowerCard {
+    align-items: flex-start;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  .lowerCard span,
+  .flipCard.unfold span {
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  
+  .flipCard {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    width: 90px;
+    height: 40px;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+ 
+  .flipCard.unfold {
+    top: 50%;
+    align-items: flex-start;
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+    background-color: white;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+ 
+  .flipCard.fold {
+    top: 0%;
+    align-items: flex-end;
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    background-color: white;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  
+  .fold {
+    -webkit-animation: fold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1
+      normal forwards;
+    animation: fold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal
+      forwards;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  
+  .unfold {
+    -webkit-animation: unfold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1
+      normal forwards;
+    animation: unfold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal
+      forwards;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  
+  @-webkit-keyframes fold {
+    0% {
+      -webkit-transform: rotateX(0deg);
+      transform: rotateX(0deg);
+    }
+    100% {
+      -webkit-transform: rotateX(-180deg);
+      transform: rotateX(-180deg);
+    }
+  }
+  
+  @keyframes fold {
+    0% {
+      -webkit-transform: rotateX(0deg);
+      transform: rotateX(0deg);
+    }
+    100% {
+      -webkit-transform: rotateX(-180deg);
+      transform: rotateX(-180deg);
+    }
+  }
+  @-webkit-keyframes unfold {
+    0% {
+      -webkit-transform: rotateX(180deg);
+      transform: rotateX(180deg);
+    }
+    100% {
+      -webkit-transform: rotateX(0deg);
+      transform: rotateX(0deg);
+    }
+  }
+  @keyframes unfold {
+    0% {
+      -webkit-transform: rotateX(180deg);
+      transform: rotateX(180deg);
+    }
+    100% {
+      -webkit-transform: rotateX(0deg);
+      transform: rotateX(0deg);
+    }
+  }
+  
