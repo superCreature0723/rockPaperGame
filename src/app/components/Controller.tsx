@@ -13,13 +13,13 @@ const Controller = ({ pcMove }: ControllerProps) => {
     // dispatcher is handler the user clicked on controller func
     const dispatcher = (key: string, path: string) => {
 
-        dispatch({ type: "SET_USER_IMAGE", payload: "/images/question1.png" })
-        dispatch({ type: "SET_PC_IMAGE", payload: "/images/question1.png" })
+        dispatch({ type: "ACTIVE_IS_CLICK" })
         // call pcMove to move the pc by the random chose
         setTimeout(() => {
             dispatch({ type: "SET_USER_SYMBOL", payload: key })
             dispatch({ type: "SET_USER_IMAGE", payload: path })
             pcMove()
+            dispatch({ type: "INACTIVE_IS_CLICK" })
         }, 1000);
     }
 
@@ -36,7 +36,7 @@ const Controller = ({ pcMove }: ControllerProps) => {
         dispatcher("paper", "/images/paper2.png")
     }
     return (
-        <div className='w-full mt-28 md:mt-12 flex gap-4 md:gap-8 items-center justify-center z-10'>
+        <div className='w-full mt-28 md:mt-12 absolute bottom-10 flex gap-4 md:gap-8 items-center justify-center z-10'>
             <ControllerItem click={rockClick} path='/images/rock-user.png' />
             <ControllerItem click={paperClick} path='/images/paper-user.png' />
             <ControllerItem click={scissorClick} path='/images/scissors-user.png' />
