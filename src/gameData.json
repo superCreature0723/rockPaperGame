@@ -1,0 +1,25 @@
+{
+  "rooms": [
+    {
+      "id": 1,
+      "name": "Room 1",
+      "status": "Waiting",
+      "currentPlayers": 1,
+      "players": [{ "id": 1, "name": "Player 1" }],
+      "maxPlayers": 2,
+      "history": []
+    },
+    {
+      "id": 2,
+      "name": "Room 2",
+      "status": "Full",
+      "currentPlayers": 2,
+      "players": [
+        { "id": 1, "name": "Player 1" },
+        { "id": 2, "name": "Player 2" }
+      ],
+      "maxPlayers": 2,
+      "history": [{ "winner": "Player 1", "timestamp": "2025-04-30 12:00:00" }]
+    }
+  ]
+}

@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import RoomInfo from "./components/lobby/RoomInfo";
 
 // Define types for Room and GameHistory
 interface Room {
   id: number;
   name: string;
   status: string;
-  players: number;
+  players: { id: number; name: string }[];
   maxPlayers: number;
+  currentPlayers: number;
 }
 
 interface GameHistory {
@@ -28,11 +30,34 @@ export default function Home() {
 
     const fetchRoomData = async () => {
       const roomData: Room[] = [
-        { id: 1, name: "Room 1", status: "Waiting", players: 1, maxPlayers: 2 },
-        { id: 2, name: "Room 2", status: "Full", players: 2, maxPlayers: 2 },
+        {
+          id: 1,
+          name: "Room 1",
+          status: "Waiting",
+          players: [{ id: 1, name: "Raptor" }],
+          maxPlayers: 2,
+          currentPlayers: 1,
+        },
+        {
+          id: 2,
+          name: "Room 2",
+          status: "Full",
+          players: [
+            { id: 1, name: "Raptor" },
+            { id: 2, name: "Tiger" },
+          ],
+          maxPlayers: 2,
+          currentPlayers: 2,
+        },
         { id: 3, name: "Room 3", status: "Waiting", players: 1, maxPlayers: 2 },
       ];
       setRooms(roomData);
+    };
+
+    const fetchGameData = async () => {
+      const response = await fetch("/api/gameData");
+      const data = await response.json();
+      setRooms(data.rooms);
     };
 
     // Simulate game history data
@@ -50,7 +75,8 @@ export default function Home() {
     ];
     setGameHistory(historyData);
 
-    fetchRoomData();
+    //fetchRoomData();
+    fetchGameData();
   }, []);
 
   return (
@@ -71,23 +97,8 @@ export default function Home() {
 
       {/* Room Section */}
       <div className="flex gap-8 mb-8">
-        {rooms.map((room) => (
-          <div
-            key={room.id}
-            className="flex flex-col items-center p-6 border-2 border-black rounded-xl w-1/3"
-          >
-            <h3 className="text-xl font-bold text-gray-900">{room.name}</h3>
-            <p className="text-sm text-gray-500 mb-4">
-              {room.players}/{room.maxPlayers} players - {room.status}
-            </p>
-            <Link
-              href={`/game`}
-              className="px-4 py-2 border-2 border-black rounded-xl text-center text-gray-800 font-medium"
-            >
-              Join
-            </Link>
-          </div>
-        ))}
+        {rooms !== undefined &&
+          rooms.map((room) => <RoomInfo key={room.id} room={room} />)}
       </div>
 
       {/* Done Section - Game History Table */}
