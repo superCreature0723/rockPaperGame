@@ -1,4 +1,5 @@
-let pcMove = [
+/* eslint-disable security/detect-object-injection */
+const pcMove = [
   {
     title: "rock",
     image: "/images/rock1.png",
