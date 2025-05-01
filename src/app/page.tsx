@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import RoomInfo from "./components/lobby/RoomInfo";
 import HistoryTable from "./components/lobby/HistoryTable";
-
+import { useRouter } from "next/navigation";
 // Define types for Room and GameHistory
 interface Room {
   id: number;
@@ -25,7 +25,17 @@ export default function Home() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
 
+  const [username, setUsername] = useState<string | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
+    const playerName = localStorage.getItem("playerName");
+    if (!playerName) {
+      router.push("/login"); // Redirect to login page if no username is found
+    } else {
+      setUsername(playerName);
+    }
+
     const fetchGameData = async () => {
       const response = await fetch("/api/gameData");
       const data = await response.json();
@@ -48,7 +58,7 @@ export default function Home() {
           href="/profile"
           className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
         >
-          Raptor
+          {username}
         </Link>
       </div>
 

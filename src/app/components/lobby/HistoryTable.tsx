@@ -8,7 +8,6 @@ interface GameHistory {
   timestamp: string;
 }
 
-
 const HistoryTable = ({ gameHistory }: { gameHistory: GameHistory }) => {
   return (
     <div className="mt-12 w-full max-w-4xl">
@@ -30,19 +29,20 @@ const HistoryTable = ({ gameHistory }: { gameHistory: GameHistory }) => {
           </tr>
         </thead>
         <tbody>
-          {gameHistory !== undefined && gameHistory.map((game, index) => (
-            <tr key={index} className="bg-white">
-              <td className="border-2 border-gray-500 px-4 py-2">
-                {game.roomName}
-              </td>
-              <td className="border-2 border-gray-500 px-4 py-2">
-                {game.winner}
-              </td>
-              <td className="border-2 border-gray-500 px-4 py-2">
-                {game.timestamp}
-              </td>
-            </tr>
-          ))}
+          {gameHistory !== undefined &&
+            gameHistory.map((game, index) => (
+              <tr key={index} className="bg-white">
+                <td className="border-2 border-gray-500 px-4 py-2">
+                  {game.roomName}
+                </td>
+                <td className="border-2 border-gray-500 px-4 py-2">
+                  {game.winner}
+                </td>
+                <td className="border-2 border-gray-500 px-4 py-2">
+                  {game.timestamp}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
