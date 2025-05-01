@@ -19,7 +19,33 @@
         { "id": 2, "name": "Player 2" }
       ],
       "maxPlayers": 2,
-      "history": [{ "winner": "Player 1", "timestamp": "2025-04-30 12:00:00" }]
+      "history": [
+        {
+          "winner": "Player 1",
+          "timestamp": "2025-04-30 12:00:00",
+          "roomName": "Room 2"
+        }
+      ]
+    }
+  ],
+  "gameHistory": [
+    {
+      "id": 1,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 2"
+    },
+    {
+      "id": 2,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 2"
+    },
+    {
+      "id": 3,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 3"
     }
   ]
 }

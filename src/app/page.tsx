@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import RoomInfo from "./components/lobby/RoomInfo";
+import HistoryTable from "./components/lobby/HistoryTable";
 
 // Define types for Room and GameHistory
 interface Room {
@@ -25,57 +26,13 @@ export default function Home() {
   const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
 
   useEffect(() => {
-    // Simulating fetching room data from an API or backend.
-    // You can replace this with actual data fetching or real-time updates.
-
-    const fetchRoomData = async () => {
-      const roomData: Room[] = [
-        {
-          id: 1,
-          name: "Room 1",
-          status: "Waiting",
-          players: [{ id: 1, name: "Raptor" }],
-          maxPlayers: 2,
-          currentPlayers: 1,
-        },
-        {
-          id: 2,
-          name: "Room 2",
-          status: "Full",
-          players: [
-            { id: 1, name: "Raptor" },
-            { id: 2, name: "Tiger" },
-          ],
-          maxPlayers: 2,
-          currentPlayers: 2,
-        },
-        { id: 3, name: "Room 3", status: "Waiting", players: 1, maxPlayers: 2 },
-      ];
-      setRooms(roomData);
-    };
-
     const fetchGameData = async () => {
       const response = await fetch("/api/gameData");
       const data = await response.json();
       setRooms(data.rooms);
+      setGameHistory(data.gameHistory);
     };
 
-    // Simulate game history data
-    const historyData: GameHistory[] = [
-      {
-        roomName: "Room 1",
-        winner: "Player 1",
-        timestamp: "2025-04-30 12:00:00",
-      },
-      {
-        roomName: "Room 2",
-        winner: "Player 2",
-        timestamp: "2025-04-30 14:00:00",
-      },
-    ];
-    setGameHistory(historyData);
-
-    //fetchRoomData();
     fetchGameData();
   }, []);
 
@@ -95,48 +52,12 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* Room Section */}
       <div className="flex gap-8 mb-8">
         {rooms !== undefined &&
           rooms.map((room) => <RoomInfo key={room.id} room={room} />)}
       </div>
 
-      {/* Done Section - Game History Table */}
-      <div className="mt-12 w-full max-w-4xl">
-        <h2 className="text-3xl font-bold text-center text-green-700 mb-4">
-          Game History
-        </h2>
-        <table className="min-w-full table-auto border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border-2 border-gray-500 px-4 py-2 text-left">
-                Room
-              </th>
-              <th className="border-2 border-gray-500 px-4 py-2 text-left">
-                Winner
-              </th>
-              <th className="border-2 border-gray-500 px-4 py-2 text-left">
-                Timestamp
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {gameHistory.map((game, index) => (
-              <tr key={index} className="bg-white">
-                <td className="border-2 border-gray-500 px-4 py-2">
-                  {game.roomName}
-                </td>
-                <td className="border-2 border-gray-500 px-4 py-2">
-                  {game.winner}
-                </td>
-                <td className="border-2 border-gray-500 px-4 py-2">
-                  {game.timestamp}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <HistoryTable gameHistory={gameHistory} />
     </main>
   );
 }
