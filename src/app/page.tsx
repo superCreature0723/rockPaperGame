@@ -45,6 +45,9 @@ export default function Home() {
 
     fetchGameData();
   }, []);
+  const handleCreateRoom = () => {
+    router.push("/game");
+  };
 
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
@@ -52,14 +55,24 @@ export default function Home() {
         Welcome To Rock Paper Scissors
       </h1>
 
-      {/* Adjusted positioning of Raptor link to top-right */}
-      <div className="flex justify-end w-full max-w-4xl mb-8">
-        <Link
-          href="/profile"
-          className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
-        >
-          {username}
-        </Link>
+      <div className="flex justify-between w-full max-w-4xl mb-8">
+        <div className="flex justify-start">
+          <Link
+            href="/create-room"
+            className="w-48 py-2 bg-green-500 text-white rounded-lg"
+          >
+            Create Game Room
+          </Link>
+        </div>
+
+        <div className="flex justify-end w-full">
+          <Link
+            href="/profile"
+            className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
+          >
+            {username}
+          </Link>
+        </div>
       </div>
 
       <div className="flex gap-8 mb-8">

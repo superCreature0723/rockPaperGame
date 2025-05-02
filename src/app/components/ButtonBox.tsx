@@ -7,7 +7,7 @@ const ButtonBox = () => {
     const { dispatch } = useGameContext()
     const router = useRouter()
     const handleGoBackToLobby = () => {
-      router.push("/"); // Redirects to the lobby page (home page)
+      router.push("/"); 
     };
 
     return (

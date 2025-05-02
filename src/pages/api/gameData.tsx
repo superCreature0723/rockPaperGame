@@ -8,7 +8,6 @@ import path from "path";
 const getGameData = () => {
   const filePath = path.join(process.cwd(), "src", "gameData.json"); // Adjust path if needed
   const fileContents = fs.readFileSync(filePath, "utf8");
-  console.log("RAPTOR:", fileContents); // Debugging line to check file contents
   return JSON.parse(fileContents);
 };
 
@@ -33,6 +32,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const { roomId, player } = req.body;
 
       // Find the room to update
+      alert("Raptor - Room ID:"); // Log the room ID for debugging
       const room = gameData.rooms.find((room: any) => room.id === roomId);
       if (!room) {
         return res.status(404).json({ error: "Room not found" });

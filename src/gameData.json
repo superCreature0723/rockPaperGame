@@ -5,7 +5,12 @@
       "name": "Room 1",
       "status": "Waiting",
       "currentPlayers": 1,
-      "players": [{ "id": 1, "name": "Player 1" }],
+      "players": [
+        {
+          "id": 1,
+          "name": "Player 1"
+        }
+      ],
       "maxPlayers": 2,
       "history": []
     },
@@ -15,8 +20,14 @@
       "status": "Full",
       "currentPlayers": 2,
       "players": [
-        { "id": 1, "name": "Player 1" },
-        { "id": 2, "name": "Player 2" }
+        {
+          "id": 1,
+          "name": "Player 1"
+        },
+        {
+          "id": 2,
+          "name": "Player 2"
+        }
       ],
       "maxPlayers": 2,
       "history": [
@@ -26,6 +37,46 @@
           "roomName": "Room 2"
         }
       ]
+    },
+    {
+      "id": 1746209437016,
+      "name": "aadfadf",
+      "status": "Waiting",
+      "players": [],
+      "maxPlayers": 2,
+      "currentPlayers": 0
+    },
+    {
+      "id": 1746209458877,
+      "name": "qweqweq",
+      "status": "Waiting",
+      "players": [],
+      "maxPlayers": 2,
+      "currentPlayers": 0
+    },
+    {
+      "id": 1746209604576,
+      "name": "123",
+      "status": "Waiting",
+      "players": [],
+      "maxPlayers": 2,
+      "currentPlayers": 0
+    },
+    {
+      "id": 1746209731429,
+      "name": "asdfa678",
+      "status": "Waiting",
+      "players": [],
+      "maxPlayers": 2,
+      "currentPlayers": 0
+    },
+    {
+      "id": 1746209745813,
+      "name": "2243243",
+      "status": "Waiting",
+      "players": [],
+      "maxPlayers": 2,
+      "currentPlayers": 0
     }
   ],
   "gameHistory": [
