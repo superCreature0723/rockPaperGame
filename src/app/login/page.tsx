@@ -21,6 +21,10 @@ export default function Login() {
       router.push("/"); // Redirect to the game lobby or home page
     }
   };
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push("/signup");
+  };
 
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
@@ -44,6 +48,12 @@ export default function Login() {
           className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg"
         >
           Start Game
+        </button>
+        <button
+          onClick={handleSignup}
+          className="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg"
+        >
+          Sign Up
         </button>
       </form>
     </main>

@@ -67,7 +67,7 @@ export default function Home() {
 
         <div className="flex justify-end w-full">
           <Link
-            href="/profile"
+            href="/login"
             className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
           >
             {username}
