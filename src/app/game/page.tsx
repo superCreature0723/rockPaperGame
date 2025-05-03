@@ -1,64 +1,104 @@
-"use client"
+"use client";
 
-import { Controller, Scores, Round, GameView, ToggleButton, ButtonBox } from "../components/index"
-import { randomPcMove } from "../../../utils/randomPcMove"
-import { useGameContext } from "../context/gameContext"
-import { useEffect } from "react"
-import BombAnimation from "../components/BombAnimation"
+import {
+  Controller,
+  Scores,
+  Round,
+  GameView,
+  ToggleButton,
+  ButtonBox,
+} from "../components/index";
+import { randomPcMove } from "../../../utils/randomPcMove";
+import { useGameContext } from "../context/gameContext";
+import { useEffect, useState } from "react";
+import BombAnimation from "../components/BombAnimation";
 
 const GamePage = () => {
-    const { state, dispatch } = useGameContext()
+  const { state, dispatch } = useGameContext();
+  const [timer, setTimer] = useState(10);
+  const [gameOver, setGameOver] = useState(false);
 
-    // every change user and pc selection call determineWinner function
-    useEffect(() => {
-        const { userSelect, pcSelect } = state
-        if (userSelect && pcSelect) {
-            determineWinner(userSelect, pcSelect)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.roundCounter])
+  useEffect(() => {
+    const { userSelect, pcSelect } = state;
+    if (userSelect && pcSelect) {
+      determineWinner(userSelect, pcSelect);
+    }
+  }, [state.roundCounter]);
 
-    // handle pc Move after user clicked on controller button
-    const pcMoveHandler = () => {
-        const { title, image } = randomPcMove()
-        // set in state
-        dispatch({ type: "SET_PC_IMAGE", payload: image })
-        dispatch({ type: "SET_PC_SYMBOL", payload: title })
-        dispatch({ type: "INCREMENT_ROUND" })
+  useEffect(() => {
+    if (state.roundCounter > 0) {
+      setTimer(10); // Reset the timer to 10 for each new round
+      setGameOver(false); // Reset gameOver state
+    }
+  }, [state.roundCounter]);
+
+  useEffect(() => {
+    let countdownInterval: NodeJS.Timeout;
+
+    if (timer > 0 && !gameOver) {
+      countdownInterval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      dispatch({ type: "INCREMENT_PC_SCORE" });
+      dispatch({ type: "INCREMENT_ROUND" });
+      setTimer(10);
     }
 
-    // point the winner after each round
-    const determineWinner = (user: string, pc: string) => {
-        // check equal user and pc 
-        if (user === pc) {
-            return dispatch({ type: "INCREMENT_GAME_TIES" })
-        }
+    return () => clearInterval(countdownInterval); // Clean up interval on unmount
+  }, [timer]);
 
-        // condition for win the user
-        // and else pc is winner
-        if (
-            (user === "rock" && pc === "scissor") ||
-            (user === "paper" && pc === "rock") ||
-            (user === "scissor" && pc === "paper")
-        ) {
-            dispatch({ type: "INCREMENT_USER_SCORE" })
-        } else {
-            dispatch({ type: "INCREMENT_PC_SCORE" })
-        }
+  const pcMoveHandler = () => {
+    const { title, image } = randomPcMove();
+    // set in state
+    dispatch({ type: "SET_PC_IMAGE", payload: image });
+    dispatch({ type: "SET_PC_SYMBOL", payload: title });
+    dispatch({ type: "INCREMENT_ROUND" });
+  };
 
+  // point the winner after each round
+  const determineWinner = (user: string, pc: string) => {
+    // check equal user and pc
+    if (user === pc) {
+      return dispatch({ type: "INCREMENT_GAME_TIES" });
     }
 
-    return (
-        <div className="w-full min-h-screen bg-primary flex flex-col select-none relative">
-            <Scores />
-            <Round round={state.roundCounter} />
-            <GameView />
-            <Controller pcMove={pcMoveHandler} />
-            <ToggleButton />
-            <ButtonBox />
-            <BombAnimation />
+    // condition for win the user
+    // and else pc is winner
+    if (
+      (user === "rock" && pc === "scissor") ||
+      (user === "paper" && pc === "rock") ||
+      (user === "scissor" && pc === "paper")
+    ) {
+      dispatch({ type: "INCREMENT_USER_SCORE" });
+    } else {
+      dispatch({ type: "INCREMENT_PC_SCORE" });
+    }
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-primary flex flex-col select-none relative">
+      <Scores />
+      <Round round={state.roundCounter} />
+      <div className="w-full flex justify-center mt-4">
+        <div className="bg-black text-white p-2 rounded-xl">
+          Time Left: {timer}s
         </div>
-    )
-}
+      </div>
+      <GameView />
+      <Controller pcMove={pcMoveHandler} />
+      <ToggleButton />
+      <ButtonBox />
+      <BombAnimation />
 
-export default GamePage
+      {/* Game Over Message */}
+      {gameOver && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-red-500">
+          Game Over! You Lost!
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GamePage;
