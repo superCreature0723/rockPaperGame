@@ -20,9 +20,9 @@ const GamePage = () => {
 
   useEffect(() => {
     const { userSelect, pcSelect } = state;
-    if (userSelect && pcSelect) {
-      determineWinner(userSelect, pcSelect);
-    }
+     if (userSelect !== "none" && pcSelect !== "none") {
+       determineWinner(userSelect, pcSelect);
+     }
   }, [state.roundCounter]);
 
   useEffect(() => {
@@ -45,8 +45,8 @@ const GamePage = () => {
       setTimer(10);
     }
 
-    return () => clearInterval(countdownInterval); // Clean up interval on unmount
-  }, [timer]);
+    return () => clearInterval(countdownInterval); // 
+  }, [timer, gameOver]);
 
   const pcMoveHandler = () => {
     const { title, image } = randomPcMove();
@@ -56,15 +56,12 @@ const GamePage = () => {
     dispatch({ type: "INCREMENT_ROUND" });
   };
 
-  // point the winner after each round
+  
   const determineWinner = (user: string, pc: string) => {
-    // check equal user and pc
+    
     if (user === pc) {
       return dispatch({ type: "INCREMENT_GAME_TIES" });
     }
-
-    // condition for win the user
-    // and else pc is winner
     if (
       (user === "rock" && pc === "scissor") ||
       (user === "paper" && pc === "rock") ||
@@ -91,8 +88,7 @@ const GamePage = () => {
       <ButtonBox />
       <BombAnimation />
 
-      {/* Game Over Message */}
-      {gameOver && (
+        {gameOver && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-red-500">
           Game Over! You Lost!
         </div>
