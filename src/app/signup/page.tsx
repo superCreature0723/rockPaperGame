@@ -8,16 +8,26 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
-  // Handle form submission
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username) {
-      // Store username in local storage or state
-      localStorage.setItem("playerName", username);
+    if (username && email) {
+      const response = await fetch("/api/save-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email }),
+      });
 
-      // Redirect to the main game page (or the lobby page)
-      router.push("/"); // Redirecting to the home page or game lobby
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("playerName", username);
+        router.push("/");
+      } else {
+        alert(data.error || "Error saving user data.");
+      }
     }
   };
 
@@ -44,8 +54,8 @@ export default function Signup() {
           Enter your Email:
         </label>
         <input
-          type="text"
-          id="username"
+          type="email"
+          id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg"
