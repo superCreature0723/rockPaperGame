@@ -56,7 +56,14 @@
       "id": 1746239086226,
       "name": "ttt",
       "status": "Waiting",
-      "players": [],
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
       "maxPlayers": 2,
       "currentPlayers": 0
     },

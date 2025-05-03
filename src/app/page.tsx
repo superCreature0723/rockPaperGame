@@ -46,6 +46,49 @@ export default function Home() {
     fetchGameData();
   }, []);
 
+
+  useEffect(() => {
+    // Fetch room data from the API when the component loads
+    const fetchRooms = async () => {
+      const response = await fetch("/api/get-rooms"); // This should fetch available rooms
+      const data = await response.json();
+      setRooms(data.rooms);
+    };
+
+    fetchRooms();
+  }, []);
+
+  const handleJoinRoom = async (roomId: number) => {
+    const playerName = localStorage.getItem("playerName");
+
+    if (!playerName) {
+      router.push("/login");
+      return;
+    }
+
+    const roomData = {
+      roomId,
+      playerName,
+    };
+
+    const response = await fetch("/api/join-room", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(roomData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      router.push("/game"); // Redirect to the game page once joined
+    } else {
+      alert("Error joining room: " + data.message);
+    }
+  };
+
+
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
       <h1 className="text-4xl font-bold text-yellow-900 mb-8">
@@ -74,7 +117,13 @@ export default function Home() {
 
       <div className="flex gap-8 mb-8">
         {rooms !== undefined &&
-          rooms.map((room) => <RoomInfo key={room.id} room={room} />)}
+          rooms.map((room) => (
+            <RoomInfo
+              key={room.id}
+              room={room}
+              handleJoinRoom={handleJoinRoom}
+            />
+          ))}
       </div>
 
       <HistoryTable gameHistory={gameHistory} />

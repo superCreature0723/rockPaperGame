@@ -11,7 +11,13 @@ interface Room {
   maxPlayers: number;
 }
 
-const RoomInfo = ({ room }: { room: Room }) => {
+const RoomInfo = ({
+  room,
+  handleJoinRoom,
+}: {
+  room: Room;
+  handleJoinRoom: (roomId: number) => void;
+}) => {
   return (
     <div
       key={room.id}
@@ -21,12 +27,14 @@ const RoomInfo = ({ room }: { room: Room }) => {
       <p className="text-sm text-gray-500 mb-4">
         {room.currentPlayers}/{room.maxPlayers} currentPlayers - {room.status}
       </p>
-      <Link
-        href={`/game`}
-        className="px-4 py-2 border-2 border-black rounded-xl text-center text-gray-800 font-medium"
+
+      <button
+        onClick={() => handleJoinRoom(room.id)}
+        disabled={room.players.length >= room.maxPlayers}
+        className="bg-green-500 text-white py-2 px-4 rounded mt-2"
       >
-        Join
-      </Link>
+        {room.players.length < room.maxPlayers ? "Join Room" : "Room Full"}
+      </button>
     </div>
   );
 };
