@@ -28,6 +28,8 @@ const GamePage = () => {
   useEffect(() => {
     if (state.roundCounter > 0) {
       setTimer(10); // Reset the timer to 10 for each new round
+      dispatch({ type: "SET_USER_SELECT", payload: "none" });
+      dispatch({ type: "SET_PC_SELECT", payload: "none" });
       setGameOver(false); // Reset gameOver state
     }
   }, [state.roundCounter]);

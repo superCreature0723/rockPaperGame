@@ -63,6 +63,10 @@ const reducer = (state: StateType, action: ActionReducerType) => {
     case "INCREMENT_ROUND": {
       return { ...state, roundCounter: state.roundCounter + 1 };
     }
+    case "SET_USER_SELECT":
+      return { ...state, userSelect: action.payload };
+    case "SET_PC_SELECT":
+      return { ...state, pcSelect: action.payload };
     case "SET_USER_SYMBOL": {
       return { ...state, userSelect: action.payload };
     }
