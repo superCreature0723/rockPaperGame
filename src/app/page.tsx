@@ -5,7 +5,7 @@ import Link from "next/link";
 import RoomInfo from "./components/lobby/RoomInfo";
 import HistoryTable from "./components/lobby/HistoryTable";
 import { useRouter } from "next/navigation";
-// Define types for Room and GameHistory
+
 interface Room {
   id: number;
   name: string;
@@ -45,9 +45,6 @@ export default function Home() {
 
     fetchGameData();
   }, []);
-  const handleCreateRoom = () => {
-    router.push("/game");
-  };
 
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
@@ -59,7 +56,7 @@ export default function Home() {
         <div className="flex justify-start">
           <Link
             href="/create-room"
-            className="w-48 py-2 bg-green-500 text-white rounded-lg"
+            className="inline-flex items-center justify-center w-48 py-2 bg-green-500 text-white rounded-lg"
           >
             Create Game Room
           </Link>

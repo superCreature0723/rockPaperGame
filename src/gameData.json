@@ -38,41 +38,10 @@
         }
       ]
     },
+
     {
-      "id": 1746209437016,
-      "name": "aadfadf",
-      "status": "Waiting",
-      "players": [],
-      "maxPlayers": 2,
-      "currentPlayers": 0
-    },
-    {
-      "id": 1746209458877,
-      "name": "qweqweq",
-      "status": "Waiting",
-      "players": [],
-      "maxPlayers": 2,
-      "currentPlayers": 0
-    },
-    {
-      "id": 1746209604576,
-      "name": "123",
-      "status": "Waiting",
-      "players": [],
-      "maxPlayers": 2,
-      "currentPlayers": 0
-    },
-    {
-      "id": 1746209731429,
-      "name": "asdfa678",
-      "status": "Waiting",
-      "players": [],
-      "maxPlayers": 2,
-      "currentPlayers": 0
-    },
-    {
-      "id": 1746209745813,
-      "name": "2243243",
+      "id": 1746239086226,
+      "name": "ttt",
       "status": "Waiting",
       "players": [],
       "maxPlayers": 2,
