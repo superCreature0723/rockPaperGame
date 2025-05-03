@@ -12,17 +12,22 @@ const CreateRoom = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const playerName = localStorage.getItem("playerName");  
+
+    if (!playerName) {
+      router.push("/login");
+      return;
+    }
+
     const roomData = {
       name: roomName,
       status: "Waiting",
       players: [],
       maxPlayers: maxPlayers,
-      currentPlayers: 0,
-      history: [],
+      currentPlayers: 1,
+      playerName: playerName, // Include player name in the request
     };
-    console.log("Raptor - Room Data:", roomData); // Log the room data for debugging
 
-    // Send a request to the API to create a new room
     const response = await fetch("/api/create-room", {
       method: "POST",
       headers: {
@@ -30,12 +35,11 @@ const CreateRoom = () => {
       },
       body: JSON.stringify(roomData),
     });
-    console.log("Raptor - Response:", response); // Log the response for debugging
 
     const data = await response.json();
 
     if (response.ok) {
-      router.push("/"); // Redirect back to the lobby page after creating the room
+      router.push("/");
     } else {
       alert("Error creating room: " + data.error);
     }

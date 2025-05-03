@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-// Helper function to read the game data from the JSON file
+const gameDataPath = path.resolve("data", "gameData.json");
+
 const getGameData = () => {
   const filePath = path.join(process.cwd(), "src", "gameData.json");
   const fileContents = fs.readFileSync(filePath, "utf8");
@@ -12,24 +13,36 @@ const getGameData = () => {
 
 // Helper function to update the game data in the JSON file
 const updateGameData = (data: any) => {
-  const filePath = path.join(process.cwd(), "/src/gameData.json");
+  const filePath = path.join(process.cwd(), "src", "gameData.json");
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const { name, status, players, maxPlayers, currentPlayers } = req.body;
+    const { name, status, maxPlayers, currentPlayers, playerName } = req.body;
+
+    if (!playerName) {
+      return res.status(400).json({ error: "Player name is required" });
+    }
+    const gameData = getGameData();
+
 
     const newRoom = {
-      id: Date.now(),
+      id: gameData.rooms.length + 1,
       name,
       status,
-      players,
       maxPlayers,
       currentPlayers,
+      players: [
+        {
+          id: 1,
+          name: playerName,
+          userSelect: "none",
+          score: 0,
+        },
+      ],
+      roundCounter: 0,
     };
-    console.log("Raptor - New Room:");
-    console.log(__dirname, process.cwd());
 
     try {
       // Get the current game data

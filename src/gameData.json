@@ -8,9 +8,18 @@
       "players": [
         {
           "id": 1,
-          "name": "Player 1"
+          "name": "Player1",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "Player2",
+          "userSelect": "none",
+          "score": 0
         }
       ],
+      "roundCounter": 0,
       "maxPlayers": 2,
       "history": []
     },
@@ -22,13 +31,18 @@
       "players": [
         {
           "id": 1,
-          "name": "Player 1"
+          "name": "Player1",
+          "userSelect": "none",
+          "score": 0
         },
         {
           "id": 2,
-          "name": "Player 2"
+          "name": "Player2",
+          "userSelect": "none",
+          "score": 0
         }
       ],
+      "roundCounter": 0,
       "maxPlayers": 2,
       "history": [
         {
@@ -38,7 +52,6 @@
         }
       ]
     },
-
     {
       "id": 1746239086226,
       "name": "ttt",
@@ -46,6 +59,22 @@
       "players": [],
       "maxPlayers": 2,
       "currentPlayers": 0
+    },
+    {
+      "id": 4,
+      "name": "qweqweq",
+      "status": "Waiting",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
     }
   ],
   "gameHistory": [
