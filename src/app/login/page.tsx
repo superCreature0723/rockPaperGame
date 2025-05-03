@@ -3,24 +3,36 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Import the navigation hook from Next.js
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const router = useRouter();
 
-  // Handle form submission
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (username) {
-      // Store username in localStorage or session
-      localStorage.setItem("playerName", username);
+      const response = await fetch("/api/check-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      });
 
-      // Redirect to the home page or game lobby page after login
-      router.push("/"); // Redirect to the game lobby or home page
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("playerName", username);
+        router.push("/");
+      } else {
+        alert(data.error || "User not found. Please sign up.");
+        router.push("/signup");
+      }
     }
   };
+
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     router.push("/signup");
