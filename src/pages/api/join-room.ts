@@ -7,15 +7,14 @@ import path from "path";
 const gameDataPath = path.join(process.cwd(), "src", "gameData.json");
 
 const getGameData = () => {
-  const filePath = path.join(process.cwd(), "src", "gameData.json");
-  const fileContents = fs.readFileSync(filePath, "utf8");
+  const fileContents = fs.readFileSync(gameDataPath, "utf8");
   return JSON.parse(fileContents);
 };
 
+
 // Helper function to update the game data in the JSON file
 const updateGameData = (data: any) => {
-  const filePath = path.join(process.cwd(), "src", "gameData.json");
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  fs.writeFileSync(gameDataPath, JSON.stringify(data, null, 2));
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -31,7 +30,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     try {
       // Read the current game data from the JSON file
-      const gameData = JSON.parse(fs.readFileSync(gameDataPath, "utf8"));
+      const gameData = getGameData();
 
       // Find the room with the given roomId
       const room = gameData.rooms.find((room) => room.id === roomId);
@@ -53,11 +52,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         score: 0, // Initial score for the new player
       };
 
-      // Push the new player to the players array
+      // Add Player 2 and update room status
       room.players.push(newPlayer);
+      if (room.players.length === 2) {
+        room.status = "Playing"; // Change status when both players are in the room
+      }
 
       // Save the updated game data back to the JSON file
-      fs.writeFileSync(gameDataPath, JSON.stringify(gameData, null, 2));
+      updateGameData(gameData);
 
       // Return the updated room data
       return res.status(200).json(room);
