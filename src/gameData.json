@@ -1,0 +1,207 @@
+{
+  "rooms": [
+    {
+      "id": 1,
+      "name": "Room 1",
+      "status": "Waiting",
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "Player1",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "Player2",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0,
+      "maxPlayers": 2,
+      "history": []
+    },
+    {
+      "id": 2,
+      "name": "Room 2",
+      "status": "Full",
+      "currentPlayers": 2,
+      "players": [
+        {
+          "id": 1,
+          "name": "Player1",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "Player2",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0,
+      "maxPlayers": 2,
+      "history": [
+        {
+          "winner": "Player 1",
+          "timestamp": "2025-04-30 12:00:00",
+          "roomName": "Room 2"
+        }
+      ]
+    },
+    {
+      "id": 1746239086226,
+      "name": "ttt",
+      "status": "Waiting",
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "maxPlayers": 2,
+      "currentPlayers": 0
+    },
+    {
+      "id": 4,
+      "name": "qweqweq",
+      "status": "Playing",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    },
+    {
+      "id": 5,
+      "name": "adfasdf",
+      "status": "Playing",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    },
+    {
+      "id": 6,
+      "name": "adsfasdf",
+      "status": "Playing",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    },
+    {
+      "id": 7,
+      "name": "ttttt",
+      "status": "Playing",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "raptor_900723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "yyy",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    },
+    {
+      "id": 8,
+      "name": "jkl",
+      "status": "Playing",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "Raptor77723",
+          "userSelect": "none",
+          "score": 0
+        },
+        {
+          "id": 2,
+          "name": "Raptor77723",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    }
+  ],
+  "gameHistory": [
+    {
+      "id": 1,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 2"
+    },
+    {
+      "id": 2,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 2"
+    },
+    {
+      "id": 3,
+      "winner": "Player 1",
+      "timestamp": "2025-04-30 12:00:00",
+      "roomName": "Room 3"
+    }
+  ]
+}
