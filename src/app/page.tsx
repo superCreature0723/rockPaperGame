@@ -6,8 +6,19 @@ import RoomInfo from "./components/lobby/RoomInfo";
 import HistoryTable from "./components/lobby/HistoryTable";
 import { useRouter } from "next/navigation";
 
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { setRoom, setSockets } from "./redux/socket/socket.slice";
+import { setIsPlaying } from "./redux/players/online-players.slice";
+import { io } from "socket.io-client";
+
+export const socket = io(
+  process.env.NODE_ENV === "production"
+    ? `${process.env.REACT_APP_SERVER_URL}`
+    : "http://localhost:5000"
+);
+
 interface Room {
-  id: number;
+  _id: string;
   name: string;
   status: string;
   players: { id: number; name: string }[];
@@ -27,36 +38,56 @@ export default function Home() {
 
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const playerName = localStorage.getItem("playerName");
     if (!playerName) {
-      router.push("/login"); // Redirect to login page if no username is found
-    } else {
-      setUsername(playerName);
+      router.push("/login");
+      return;
     }
+    setUsername(playerName);
 
-    const fetchGameData = async () => {
-      const response = await fetch("/api/gameData");
-      const data = await response.json();
-      setRooms(data.rooms);
-      setGameHistory(data.gameHistory);
-    };
+    socket.emit("user-login", playerName);
 
-    fetchGameData();
-  }, []);
+    socket.on("user-login", (newUser: string) => {
+      // you could update a user list in redux here
+    });
 
+    socket.on("updated-users", (users: string[]) => {
+      dispatch(setSockets(users));
+    });
 
-  useEffect(() => {
-    // Fetch room data from the API when the component loads
-    const fetchRooms = async () => {
-      const response = await fetch("/api/get-rooms"); // This should fetch available rooms
-      const data = await response.json();
-      setRooms(data.rooms);
-    };
-
+    // fetch rooms from backend (or better, dispatch an action that fetches rooms)
     fetchRooms();
-  }, []);
+
+    return () => {
+      socket.off("user-login");
+      socket.off("updated-users");
+    };
+  }, [router, dispatch]);
+
+
+  const fetchRooms = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/get-rooms"); // Make sure the backend URL is correct
+      if (response.ok) {
+        const data = await response.json();
+        setRooms(data.rooms); // Set the rooms data from backend
+        console.log("Rooms fetched successfully:", data.rooms);
+      } else {
+        console.error("Failed to fetch rooms");
+      }
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
+  };
+
+  
+  const handleLogout = () => {
+    localStorage.removeItem("playerName"); // Remove stored username
+    router.push("/login"); // Redirect to login page
+  };
 
   const handleJoinRoom = async (roomId: number) => {
     const playerName = localStorage.getItem("playerName");
@@ -88,7 +119,6 @@ export default function Home() {
     }
   };
 
-
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
       <h1 className="text-4xl font-bold text-yellow-900 mb-8">
@@ -106,12 +136,21 @@ export default function Home() {
         </div>
 
         <div className="flex justify-end w-full">
-          <Link
-            href="/login"
-            className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
-          >
-            {username}
-          </Link>
+          {username ? (
+            <button
+              onClick={handleLogout}
+              className="text-2xl font-light uppercase underline underline-offset-8 text-red-900 cursor-pointer bg-transparent border-none"
+            >
+              Logout ({username})
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
 
@@ -119,7 +158,7 @@ export default function Home() {
         {rooms !== undefined &&
           rooms.map((room) => (
             <RoomInfo
-              key={room.id}
+              key={room._id}
               room={room}
               handleJoinRoom={handleJoinRoom}
             />

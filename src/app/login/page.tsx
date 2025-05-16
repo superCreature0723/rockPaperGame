@@ -1,71 +1,71 @@
-// src/app/login/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    if (username) {
-      const response = await fetch("/api/check-user", {
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("playerName", username);
+        // Save token & user info (you might want to use cookies or localStorage)
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("playerName", data.user.username);
+
         router.push("/");
       } else {
-        alert(data.error || "User not found. Please sign up.");
-        router.push("/signup");
+        setError(data.error || "Login failed");
       }
+    } catch (err) {
+      setError("An unexpected error occurred.");
     }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push("/signup");
-  };
-
   return (
-    <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
-      <h1 className="text-4xl font-bold text-yellow-900 mb-8">Login</h1>
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-stone-200">
+      <h1 className="text-4xl font-bold mb-6 text-yellow-900">Login</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 w-full max-w-md"
+      >
+        {error && <p className="text-red-600">{error}</p>}
 
-      <form onSubmit={handleLogin} className="flex flex-col gap-4">
-        <label htmlFor="username" className="text-lg font-medium text-gray-800">
-          Enter your name:
-        </label>
         <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg"
-          placeholder="Enter your username"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
+          className="p-2 rounded border"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="p-2 rounded border"
         />
         <button
           type="submit"
-          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg"
+          className="py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
-          Start Game
-        </button>
-        <button
-          onClick={handleSignup}
-          className="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg"
-        >
-          Sign Up
+          Login
         </button>
       </form>
     </main>
