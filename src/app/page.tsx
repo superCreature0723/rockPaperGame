@@ -7,8 +7,17 @@ import HistoryTable from "./components/lobby/HistoryTable";
 import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { setRoom, setSockets } from "./redux/socket/socket.slice";
-import { setIsPlaying } from "./redux/players/online-players.slice";
+import {
+  setPlayerOneActive,
+  setIsPlaying,
+} from "./redux/players/online-players.slice";
+import {
+  setRoom,
+  setSockets,
+  setRooms,
+  addRoom,
+} from "./redux/socket/socket.slice";
+
 import { io } from "socket.io-client";
 
 export const socket = io(
@@ -33,12 +42,20 @@ interface GameHistory {
 }
 
 export default function Home() {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  //const [rooms, setRooms] = useState<Room[]>([]);
+  const { room, sockets } = useAppSelector((state) => state.socket);
+  const rooms = useAppSelector((state) => state.socket.rooms);
   const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
-
+  const [newRoomName, setNewRoomName] = useState("");
   const [username, setUsername] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState("");
+
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewRoomName(room);
+  }, [room]);
 
   useEffect(() => {
     const playerName = localStorage.getItem("playerName");
@@ -58,22 +75,27 @@ export default function Home() {
       dispatch(setSockets(users));
     });
 
+    socket.on("new-room", (newRoom: { room: Room }) => {
+      console.log("New room created RAPTOR:", newRoom);
+      dispatch(addRoom(newRoom.room));
+    });
+
     // fetch rooms from backend (or better, dispatch an action that fetches rooms)
     fetchRooms();
 
     return () => {
       socket.off("user-login");
       socket.off("updated-users");
+      socket.off("new-room");
     };
   }, [router, dispatch]);
-
 
   const fetchRooms = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/get-rooms"); // Make sure the backend URL is correct
       if (response.ok) {
         const data = await response.json();
-        setRooms(data.rooms); // Set the rooms data from backend
+        dispatch(setRooms(data.rooms));
         console.log("Rooms fetched successfully:", data.rooms);
       } else {
         console.error("Failed to fetch rooms");
@@ -83,20 +105,69 @@ export default function Home() {
     }
   };
 
-  
+  const handleCreateRoom = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!newRoomName.trim()) return; // prevent empty room name
+
+    const playerName = localStorage.getItem("playerName");
+    if (!playerName) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      // Call backend API to create the room
+      const response = await fetch("http://localhost:5000/api/create-room", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newRoomName.trim(),
+          maxPlayers: 2, // or get from user input if applicable
+          playerName: playerName,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Room creation response:", data);
+      if (response.ok) {
+        // Dispatch player one active if needed
+        dispatch(setPlayerOneActive(true));
+
+        // Emit join-room event with the new room's ID or name (use whichever your backend expects)
+        socket.emit("join-room", data._id || data.name);
+
+        setSuccessMessage(`You created room ${data.name} & joined`);
+
+        // Optionally reset input and redux room state
+        setNewRoomName("");
+        dispatch(setRoom(""));
+
+        // Also add the new room to redux store to update the UI immediately (optional)
+        //dispatch(addRoom(data.room));
+      } else {
+        setSuccessMessage(data.error || "Failed to create room");
+      }
+    } catch (error) {
+      console.error("Error creating room:", error);
+      setSuccessMessage("Error creating room");
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("playerName"); // Remove stored username
     router.push("/login"); // Redirect to login page
   };
 
-  const handleJoinRoom = async (roomId: number) => {
+  const handleJoinRoom = async (roomId: string) => {
     const playerName = localStorage.getItem("playerName");
 
     if (!playerName) {
       router.push("/login");
       return;
     }
-
     const roomData = {
       roomId,
       playerName,
@@ -118,6 +189,12 @@ export default function Home() {
       alert("Error joining room: " + data.message);
     }
   };
+  const handleChangeRoom = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewRoomName(e.target.value.trim());
+    dispatch(setRoom(e.target.value.trim()));
+  };
+
+  console.log("Rooms in Home:", rooms);
 
   return (
     <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
@@ -126,14 +203,22 @@ export default function Home() {
       </h1>
 
       <div className="flex justify-between w-full max-w-4xl mb-8">
-        <div className="flex justify-start">
-          <Link
-            href="/create-room"
-            className="inline-flex items-center justify-center w-48 py-2 bg-green-500 text-white rounded-lg"
+        <form onSubmit={handleCreateRoom} className="mb-8">
+          <input
+            type="text"
+            value={newRoomName}
+            onChange={handleChangeRoom}
+            className="px-4 py-2 border border-gray-300 rounded-lg"
+            placeholder="Enter room name"
+            required
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-green-500 text-white rounded-lg ml-4"
           >
-            Create Game Room
-          </Link>
-        </div>
+            Create Room
+          </button>
+        </form>
 
         <div className="flex justify-end w-full">
           {username ? (
@@ -154,14 +239,15 @@ export default function Home() {
         </div>
       </div>
 
+      {<p>{successMessage}</p>}
+      {successMessage && !successMessage.includes("two players") && (
+        <p>Wait for an opponent to join</p>
+      )}
+
       <div className="flex gap-8 mb-8">
         {rooms !== undefined &&
-          rooms.map((room) => (
-            <RoomInfo
-              key={room._id}
-              room={room}
-              handleJoinRoom={handleJoinRoom}
-            />
+          rooms.map((room, idx) => (
+            <RoomInfo key={idx} room={room} handleJoinRoom={handleJoinRoom} />
           ))}
       </div>
 

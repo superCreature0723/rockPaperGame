@@ -3,7 +3,6 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-
 import scorerReducer from "./score/scorer.slice";
 import onlineScorerReducer from "./score/online-score.slice";
 import playersReducer from "./players/players.slice";
@@ -36,8 +35,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
-
-export const persistor = persistStore(store);
+// export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 

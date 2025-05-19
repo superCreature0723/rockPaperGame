@@ -182,6 +182,38 @@
         }
       ],
       "roundCounter": 0
+    },
+    {
+      "id": 9,
+      "name": "qwe",
+      "status": "Waiting",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "test",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
+    },
+    {
+      "id": 10,
+      "name": "456456",
+      "status": "Waiting",
+      "maxPlayers": 2,
+      "currentPlayers": 1,
+      "players": [
+        {
+          "id": 1,
+          "name": "test",
+          "userSelect": "none",
+          "score": 0
+        }
+      ],
+      "roundCounter": 0
     }
   ],
   "gameHistory": [
