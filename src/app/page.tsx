@@ -19,6 +19,7 @@ import {
 } from "./redux/socket/socket.slice";
 
 import { io } from "socket.io-client";
+import OnlineGameStart from "./online/game-start";
 
 export const socket = io(
   process.env.NODE_ENV === "production"
@@ -49,7 +50,7 @@ export default function Home() {
   const [newRoomName, setNewRoomName] = useState("");
   const [username, setUsername] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
-
+  const { isPlaying } = useAppSelector((state) => state.onlinePlayers);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -194,64 +195,74 @@ export default function Home() {
     dispatch(setRoom(e.target.value.trim()));
   };
 
-  console.log("Rooms in Home:", rooms);
+
 
   return (
-    <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
-      <h1 className="text-4xl font-bold text-yellow-900 mb-8">
-        Welcome To Rock Paper Scissors
-      </h1>
+    <>
+      {isPlaying ? (
+        <OnlineGameStart />
+      ) : (
+        <main className="w-full flex flex-col items-center justify-center min-h-screen bg-stone-200 p-4">
+          <h1 className="text-4xl font-bold text-yellow-900 mb-8">
+            Welcome To Rock Paper Scissors
+          </h1>
 
-      <div className="flex justify-between w-full max-w-4xl mb-8">
-        <form onSubmit={handleCreateRoom} className="mb-8">
-          <input
-            type="text"
-            value={newRoomName}
-            onChange={handleChangeRoom}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
-            placeholder="Enter room name"
-            required
-          />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-green-500 text-white rounded-lg ml-4"
-          >
-            Create Room
-          </button>
-        </form>
+          <div className="flex justify-between w-full max-w-4xl mb-8">
+            <form onSubmit={handleCreateRoom} className="mb-8">
+              <input
+                type="text"
+                value={newRoomName}
+                onChange={handleChangeRoom}
+                className="px-4 py-2 border border-gray-300 rounded-lg"
+                placeholder="Enter room name"
+                required
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-green-500 text-white rounded-lg ml-4"
+              >
+                Create Room
+              </button>
+            </form>
 
-        <div className="flex justify-end w-full">
-          {username ? (
-            <button
-              onClick={handleLogout}
-              className="text-2xl font-light uppercase underline underline-offset-8 text-red-900 cursor-pointer bg-transparent border-none"
-            >
-              Logout ({username})
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
-            >
-              Login
-            </Link>
+            <div className="flex justify-end w-full">
+              {username ? (
+                <button
+                  onClick={handleLogout}
+                  className="text-2xl font-light uppercase underline underline-offset-8 text-red-900 cursor-pointer bg-transparent border-none"
+                >
+                  Logout ({username})
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className="text-2xl font-light uppercase underline underline-offset-8 text-red-900"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {<p>{successMessage}</p>}
+          {successMessage && !successMessage.includes("two players") && (
+            <p>Wait for an opponent to join</p>
           )}
-        </div>
-      </div>
 
-      {<p>{successMessage}</p>}
-      {successMessage && !successMessage.includes("two players") && (
-        <p>Wait for an opponent to join</p>
+          <div className="flex gap-8 mb-8">
+            {rooms !== undefined &&
+              rooms.map((room, idx) => (
+                <RoomInfo
+                  key={idx}
+                  room={room}
+                  handleJoinRoom={handleJoinRoom}
+                />
+              ))}
+          </div>
+
+          <HistoryTable gameHistory={gameHistory} />
+        </main>
       )}
-
-      <div className="flex gap-8 mb-8">
-        {rooms !== undefined &&
-          rooms.map((room, idx) => (
-            <RoomInfo key={idx} room={room} handleJoinRoom={handleJoinRoom} />
-          ))}
-      </div>
-
-      <HistoryTable gameHistory={gameHistory} />
-    </main>
+    </>
   );
 }
